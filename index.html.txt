@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Alert systemowy</title>
+<style>
+body {
+    background: black;
+    color: lime;
+    font-family: monospace;
+    text-align: center;
+    padding-top: 50px;
+    overflow: hidden;
+}
+button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    background: #222;
+    color: lime;
+    border: 2px solid lime;
+}
+#joke {
+    display: none;
+    color: white;
+    font-size: 30px;
+    margin-top: 40px;
+}
+#zombie {
+    margin: 40px auto 0;
+    width: 160px;
+    height: 220px;
+    position: relative;
+    transform: scale(1);
+    animation: bob 1s ease-in-out infinite;
+}
+.pixel {
+    position: absolute;
+    box-sizing: border-box;
+}
+.head { width: 100px; height: 100px; background: #4a8f2f; left: 30px; top: 0; }
+.eye { width: 18px; height: 18px; background: #7fffd4; border: 3px solid #163a17; }
+.eye.left { left: 40px; top: 30px; }
+.eye.right { left: 82px; top: 30px; }
+.mouth { width: 40px; height: 16px; background: #163a17; left: 60px; top: 70px; border-radius: 4px; }
+.body { width: 120px; height: 100px; background: #356e1f; left: 20px; top: 100px; }
+.arm { width: 20px; height: 80px; background: #4a8f2f; }
+.arm.left { left: 0; top: 110px; transform-origin: top center; animation: swing 0.8s ease-in-out infinite; }
+.arm.right { right: 0; top: 110px; transform-origin: top center; animation: swing 0.8s ease-in-out infinite reverse; }
+.leg { width: 24px; height: 90px; background: #163a17; top: 200px; }
+.leg.left { left: 40px; transform-origin: top center; animation: walk 0.8s ease-in-out infinite; }
+.leg.right { left: 90px; transform-origin: top center; animation: walk 0.8s ease-in-out infinite reverse; }
+@keyframes swing {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(15deg); }
+}
+@keyframes walk {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(10deg); }
+}
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+@keyframes flash {
+    0%, 100% { color: lime; }
+    50% { color: #fff; }
+}
+.active #hack {
+    animation: flash 0.4s infinite;
+}
+</style>
+</head>
+<body>
+
+<h1 id="hack">TRWA USUWANIE KONT...</h1>
+<h1 id="hack"> <div id="counter">Usunięto: 0 kont</div>
+<div id="zombie">
+let count = 0;
+const counter = document.getElementById("counter");
+
+const interval = setInterval(() => {
+    count += Math.floor(Math.random() * 40);
+    counter.textContent = `Usunięto: ${count} kont`;
+}, 150);
+
+setTimeout(() => clearInterval(interval), 4000);
+    <div class="pixel head"></div>
+    <div class="pixel eye left"></div>
+    <div class="pixel eye right"></div>
+    <div class="pixel mouth"></div>
+    <div class="pixel body"></div>
+    <div class="pixel arm left"></div>
+    <div class="pixel arm right"></div>
+    <div class="pixel leg left"></div>
+    <div class="pixel leg right"></div>
+</div>
+
+<button id="startBtn">Włącz Zombie + Dźwięk</button>
+
+<div id="joke">
+    😂 haha nabrałeś się
+</div>
+
+<script>
+function playLoudZombie() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const gain = audioCtx.createGain();
+    gain.gain.value = 1.0;
+    gain.connect(audioCtx.destination);
+
+    const oscillator = audioCtx.createOscillator();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(120, audioCtx.currentTime);
+
+    const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.6;
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = noiseBuffer;
+
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.value = 0.7;
+    noise.connect(noiseGain).connect(gain);
+
+    oscillator.connect(gain);
+    oscillator.start();
+    noise.start();
+
+    oscillator.stop(audioCtx.currentTime + 0.45);
+    noise.stop(audioCtx.currentTime + 0.45);
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+    document.body.classList.add('active');
+    document.getElementById('startBtn').disabled = true;
+    playLoudZombie();
+    setTimeout(() => {
+        document.getElementById('hack').style.display = 'none';
+        document.getElementById('joke').style.display = 'block';
+    }, 4000);
+});
+</script>
+
+</body>
+</html>animation:
+    bob 1s ease-in-out infinite,
+    moveZombie 4s linear forwards;@keyframes moveZombie {
+    from {
+        transform: translateX(-500px);
+    }
+    to {
+        transform: translateX(500px);
+    }
+}
+<div id="msg"></div>
+alert("SYSTEM OCALONY.\nTo był tylko żart 😂");
